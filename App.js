@@ -1,7 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import {DatabaseProvider} from './src/global/db/DatabaseContext';
+import {AuthenticationProvider} from './src/global/auth/AuthenticationContext';
+
+//Screens
+import Login from './src/screens/auth/Login';
+import Signup from './src/screens/auth/Signup';
+import MainNavigator from './src/screens/main/MainNavigator';
 
 
 const styles = StyleSheet.create({
@@ -13,56 +21,21 @@ const styles = StyleSheet.create({
   },
 });
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => {
-          /* 1. Navigate to the Details route with params */
-          navigation.navigate('Details', {
-            itemId: 86,
-            otherParam: 'anything you want here',
-          });
-        }}
-      />
-    </View>
-  );
-}
-
-function DetailsScreen({ route, navigation }) {
-  /* 2. Get the param */
-  const { itemId, otherParam } = route.params;
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Text>itemId: {JSON.stringify(itemId)}</Text>
-      <Text>otherParam: {JSON.stringify(otherParam)}</Text>
-      <Button
-        title="Go to Details... again"
-        onPress={() =>
-          navigation.push('Details', {
-            itemId: Math.floor(Math.random() * 100),
-          })
-        }
-      />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-    </View>
-  );
-}
-
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthenticationProvider>
+      <DatabaseProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="MainNavigator" component={MainNavigator} options={{ headerShown: false }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+    </DatabaseProvider>
+    </AuthenticationProvider>
   );
 }
 
