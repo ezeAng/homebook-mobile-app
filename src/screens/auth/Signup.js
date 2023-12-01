@@ -1,24 +1,24 @@
-import { View, Text, Button } from 'react-native';
-import React, { useState } from 'react';
-
+import { View, Text, Button, ActivityIndicator } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { AuthenticationContext } from '../../global/auth/AuthenticationContext';
 const Signup = ({ route, navigation }) => {
     const { username, password } = route.params;
 
-    const [isLoading, setIsLoading] = useState(false);
+    const {signup, isLoading} = useContext(AuthenticationContext);
 
-    const handleSignup = () => {
-        setIsLoading(true);
-
-        // Here, implement your login logic, possibly making a request to your backend.
-        // This is just a mockup of a login function that "waits" for 2 seconds.
-        setTimeout(() => {
-            setIsLoading(false);
-            alert('Signed up successfully!');
-            
-        }, 2000);
-
-        navigation.navigate('Login');
-    }
+    const handleSignup = async () => {
+        try {
+          var res = await signup(username, password);
+          console.log("Handle Signup", res);
+          //if successful signup, 
+          if (res) {
+            navigation.navigate('Login');
+          }
+        } catch(e) {
+          console.log(`Error on signup, try again: ${e}`);
+          alert(`Error on signup, try again: ${e}`);
+        }
+      };  
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text>Signup page</Text>

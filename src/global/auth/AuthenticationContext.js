@@ -11,9 +11,40 @@ const AuthenticationProvider = ({children}) => {
     const [userToken, setUserToken] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
 
+    const signup = async (username, password) => {
+        setIsLoading(true);
+        const email = "fake@mail.com";
+        var name = username + "-name";
+        const result = await axios.post(`${BASE_URL}/users/signup`,{
+            username,
+            password,
+            email,
+            name
+        })
+        .then(async res => {
+            let userInfo = res.data;
+            setUserInfo(userInfo.user);
+            console.log("Auth signup: ", userInfo);
+            if (userInfo) {
+                console.log("Returning: ", userInfo)
+                return userInfo;
+            }
+            setIsLoading(false);
+        })
+        .catch(e => {
+            console.log(`Error on signup: ${e}`);
+            setIsLoading(false);
+        });
+
+        
+        setIsLoading(false);
+        return result;
+        
+    }
+
     const login = async (username, password) => {
         setIsLoading(true);
-        await axios.post(`${BASE_URL}/users/login`,{
+        const result = await axios.post(`${BASE_URL}/users/login`,{
             username,
             password
         })
@@ -24,15 +55,16 @@ const AuthenticationProvider = ({children}) => {
 
             await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             await AsyncStorage.setItem('userToken', userInfo.accessToken);
+            if (userInfo) {
+                return userInfo;
+            }
         })
         .catch(e => {
             console.log(`Error on login: ${e}`);
         });
         
         setIsLoading(false);
-        if (userInfo) {
-            return userInfo;
-        }
+        return result;
     }
 
     const logout = async () => {
@@ -68,7 +100,7 @@ const AuthenticationProvider = ({children}) => {
     }, [])
 
     return (
-        <AuthenticationContext.Provider value={{login, logout, isLoading, userInfo}}>
+        <AuthenticationContext.Provider value={{login, logout, signup, isLoading, userInfo}}>
             {children}
         </AuthenticationContext.Provider>
     )

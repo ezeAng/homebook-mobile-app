@@ -35,6 +35,8 @@ const Login = ({ navigation }) => {
         navigation.navigate('MainNavigator', {
           screen: 'Discover'
         });
+      } else {
+        alert(`Error on login, try again. Status code: ${res.status}`);
       }
     } catch(e) {
       console.log(`Error on login, try again: ${e}`);
@@ -73,8 +75,8 @@ const Login = ({ navigation }) => {
         onPress={() => {
           /* 1. Navigate to the Signup route with params */
           navigation.navigate('Signup', {
-            username: 'testuser',
-            password: 'testpass',
+            username: username,
+            password: password,
           });
         }}
       />
