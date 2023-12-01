@@ -1,6 +1,8 @@
 import { View, Text, Button} from 'react-native';
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useContext } from 'react'
 import SwipableCard from '../../components/SwipeableCard/SwipableCard';
+import { AuthenticationContext } from '../../global/auth/AuthenticationContext';
+
 
 
 //Change to a DB context soon
@@ -80,6 +82,8 @@ let profileState = profilesDB
 
 const Discover = () => {
 
+  const {userInfo} = useContext(AuthenticationContext);
+
   const [profiles, setProfiles] = useState(profilesDB)
   const [lastDirection, setLastDirection] = useState()
 
@@ -89,8 +93,6 @@ const Discover = () => {
     console.log('removing: ' + nameToDelete + ' to the ' + direction)
     setLastDirection(direction)
     alreadyRemoved.push(nameToDelete)
-
-    
   }
 
   const outOfFrame = (name) => {
@@ -117,7 +119,7 @@ const Discover = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Discover</Text>
+      {userInfo ? <Text>Welcome, {userInfo.name}.</Text> : null}
       <View style={styles.cardContainer}>
         {profiles.map((profile, index) =>
           <SwipableCard 

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, TextInput, Button, Text, ActivityIndicator, StyleSheet } from 'react-native';
-
+import { AuthenticationContext } from '../../global/auth/AuthenticationContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,28 +20,26 @@ const styles = StyleSheet.create({
 
 const Login = ({ navigation }) => {
 
+  const {login, isLoading} = useContext(AuthenticationContext);
+
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    setIsLoading(true);
-
-    // Here, implement your login logic, possibly making a request to your backend.
-    // This is just a mockup of a login function that "waits" for 2 seconds.
-    setTimeout(() => {
-        setIsLoading(false);
-        alert('Logged in successfully!');
-        
-    }, 2000);
-
-    //if successful login, 
-    navigation.navigate('MainNavigator', {
-      screen: 'Discover'
-    });
-
-    //else go remain to login screen
+    try {
+      var res = await login(username, password);
+      console.log(res);
+      //if successful login, 
+      if (res) {
+        navigation.navigate('MainNavigator', {
+          screen: 'Discover'
+        });
+      }
+    } catch(e) {
+      console.log(`Error on login, try again: ${e}`);
+      alert(`Error on login, try again: ${e}`);
+    }
   };  
 
 

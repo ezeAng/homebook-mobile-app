@@ -6,6 +6,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {DatabaseProvider} from './src/global/db/DatabaseContext';
 import {AuthenticationProvider} from './src/global/auth/AuthenticationContext';
 
+import { useContext } from 'react';
+import { ActivityIndicator } from 'react-native';
+
 //Screens
 import Login from './src/screens/auth/Login';
 import Signup from './src/screens/auth/Signup';
@@ -24,6 +27,9 @@ const styles = StyleSheet.create({
 const Stack = createNativeStackNavigator();
 
 function App() {
+
+
+
   return (
     <AuthenticationProvider>
       <DatabaseProvider>
@@ -34,7 +40,7 @@ function App() {
             <Stack.Screen name="MainNavigator" component={MainNavigator} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
-    </DatabaseProvider>
+      </DatabaseProvider>
     </AuthenticationProvider>
   );
 }

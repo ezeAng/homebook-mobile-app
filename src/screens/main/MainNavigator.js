@@ -6,9 +6,12 @@ import Settings from './Settings';
 import Community from './Community';
 
 
+
+
 const Tab = createBottomTabNavigator();
 
 const MainNavigator = () => {
+
 
   return (
     <Tab.Navigator>
