@@ -9,7 +9,6 @@ const Signup = ({ route, navigation }) => {
     const handleSignup = async () => {
         try {
           var res = await signup(username, password);
-          console.log("Handle Signup", res);
           //if successful signup, 
           if (res) {
             navigation.navigate('Login');
